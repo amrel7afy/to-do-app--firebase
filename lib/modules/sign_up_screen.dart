@@ -27,7 +27,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       create: (BuildContext context) =>LoginCubit(),
       child: BlocConsumer<LoginCubit,LoginStates>(
         listener: (context,state){
-          if(state is RegisterSuccessState){
+          if(state is CreateSuccessState){
             navigateAndFinish(context, LoginScreen());
           }
         },
