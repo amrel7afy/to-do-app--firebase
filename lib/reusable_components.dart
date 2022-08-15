@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_cis_to_do_app/models/task_model.dart';
+import 'package:new_cis_to_do_app/shared/cubit/app_cubit/app_cubit.dart';
 
 import 'constants.dart';
 
@@ -82,14 +83,17 @@ void navigateAndFinish(context, widget) {
 
 class TaskItem extends StatefulWidget {
   late TaskModel taskModel;
-  TaskItem({required this.taskModel});
+  late final DismissDirectionCallback onDismissed;
+  TaskItem({required this.taskModel,required this.onDismissed});
+  // هنا عشان نباصي داتا ل stateful widget
   @override
-  State<TaskItem> createState() => _TaskItemState(taskModel:taskModel );
+  State<TaskItem> createState() => _TaskItemState(taskModel:taskModel ,onDismissed: onDismissed);
 }
 
 class _TaskItemState extends State<TaskItem> {
   late TaskModel taskModel;
-  _TaskItemState({required this.taskModel});
+  late final DismissDirectionCallback onDismissed;
+  _TaskItemState({required this.taskModel,required this.onDismissed});
   bool tapped=false;
   onChanged(on){
     setState(() {
@@ -99,7 +103,10 @@ class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: Key('key'),
+      // وانت شغال مع dismissible
+      // ابقي استدعي onDismissed برا عشان لو هتمسح العنصر يمسحها كمان من ال
+      //widget tree
+      key: ObjectKey(taskModel.text),
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
         padding: EdgeInsets.only(left: 10),
@@ -133,6 +140,7 @@ class _TaskItemState extends State<TaskItem> {
         ),
       ),
       onDismissed: (direction){
+        onDismissed(direction);
       },
     );
   }

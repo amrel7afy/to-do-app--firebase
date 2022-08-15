@@ -8,9 +8,14 @@ import 'package:new_cis_to_do_app/shared/cubit/app_cubit/app_states.dart';
 
 import 'new_task_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -41,8 +46,20 @@ class HomeScreen extends StatelessWidget {
                     if(cubit.tasks.length!=0)
                       Expanded(
                       child: ListView.builder(
-                        itemBuilder: (context,index)=>TaskItem(taskModel: cubit.tasks[index] ,),itemCount: cubit.tasks.length,),
-                    )
+
+                        itemBuilder: (context,index){
+                          if(cubit.tasks.length!=0)
+                            return TaskItem(taskModel: cubit.tasks[index],onDismissed: (direction){
+                              setState(() {
+                                cubit.tasks.removeAt(index);
+                                print('delete object number: '+index.toString());
+                              });
+                            },);
+                          return Container();
+
+                          },
+                        itemCount: cubit.tasks.length,
+                    ),)
                   ],
                 ),
               ),

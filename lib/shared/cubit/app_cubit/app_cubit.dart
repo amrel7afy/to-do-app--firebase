@@ -35,6 +35,7 @@ class AppCubit extends Cubit<AppStates>{
 //----------------------------------------------------------------------------------
   //add new task
   List<TaskModel> tasks=[];
+  List<String>tasksIds=[];
   
   void addNewTask(
   {required String text,
@@ -43,13 +44,15 @@ class AppCubit extends Cubit<AppStates>{
   }
       ){
     emit(AddNewTaskLoadingState());
-TaskModel taskModel=TaskModel(text: text, status: false, date: date,time:time );
+TaskModel taskModel=TaskModel(text: text, status: false, date: date,time:time,taskId: 'empty' );
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
         .collection('tasks')
         .add(taskModel.toMap())
         .then((value) {
+          tasksIds.add(value.id);
+          print('Task ID: '+tasksIds.length.toString());
           emit(AddNewTaskSuccessState());
     })
         .catchError((error){
@@ -77,5 +80,21 @@ TaskModel taskModel=TaskModel(text: text, status: false, date: date,time:time );
 
   }
 
+  //>>>>>>>>>>>>>delete task<<<<<<<<<<<<<<<<<<<<<<<<<
+void deleteTask(
+  {required int index}){
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('tasks')
+        .doc('${tasksIds[index]}').delete()
+        .then((value) {
+          emit(DeleteTaskSuccessState());
+    })
+        .catchError((error){
+          print(error.toString());
+          emit(DeleteTaskErrorState(error.toString()));
+    });
+}
 
 }

@@ -25,3 +25,10 @@ class GetTasksErrorState extends AppStates{
   final String error;
   GetTasksErrorState(this.error);
 }
+
+//delete task-----------------------
+class DeleteTaskSuccessState extends AppStates{}
+class DeleteTaskErrorState extends AppStates{
+  final String error;
+  DeleteTaskErrorState(this.error);
+}
