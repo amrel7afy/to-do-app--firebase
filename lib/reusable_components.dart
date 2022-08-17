@@ -84,16 +84,32 @@ void navigateAndFinish(context, widget) {
 class TaskItem extends StatefulWidget {
   late TaskModel taskModel;
   late final DismissDirectionCallback onDismissed;
-  TaskItem({required this.taskModel,required this.onDismissed});
+  late final int index;
+  // late final Function onChanged;
+  // late final bool tapped;
+  TaskItem({required this.taskModel,required this.onDismissed,
+    required this.index
+    //required this.onChanged,required this.tapped
+  });
   // هنا عشان نباصي داتا ل stateful widget
   @override
-  State<TaskItem> createState() => _TaskItemState(taskModel:taskModel ,onDismissed: onDismissed);
+  State<TaskItem> createState() => _TaskItemState(taskModel:taskModel ,onDismissed: onDismissed,
+     index: index
+     // onChanged: onChanged,tapped:tapped
+  );
 }
 
 class _TaskItemState extends State<TaskItem> {
   late TaskModel taskModel;
   late final DismissDirectionCallback onDismissed;
-  _TaskItemState({required this.taskModel,required this.onDismissed});
+  late final int index;
+  // late final Function onChanged;
+  // late final bool tapped;
+
+  _TaskItemState({required this.taskModel,required this.onDismissed,
+    required this.index
+   // required this.onChanged,required this.tapped
+  });
   bool tapped=false;
   onChanged(on){
     setState(() {
@@ -120,9 +136,14 @@ class _TaskItemState extends State<TaskItem> {
           children: [
             Transform.scale(
               scale: 1.5,
-              child: Checkbox(value: tapped, onChanged: (on){
+              child: Checkbox(
+                value: tapped,
+                onChanged: (on){
                 onChanged(on);
-              },
+                AppCubit.get(context).tasks[index].status=tapped;
+                AppCubit.get(context).updateTaskStatus(index: index, status: on!);
+                print('Task $index Status: '+AppCubit.get(context).tasks[index].status.toString());
+                },
                 side: BorderSide(
                   color: pinkColor,
                   width: 1.5,

@@ -21,6 +21,7 @@ class AddNewTaskErrorState extends AppStates{
 
 //get tasks-------------------------------------
 class GetTasksSuccessState extends AppStates{}
+class GetTasksLoadingState extends AppStates{}
 class GetTasksErrorState extends AppStates{
   final String error;
   GetTasksErrorState(this.error);
@@ -31,4 +32,11 @@ class DeleteTaskSuccessState extends AppStates{}
 class DeleteTaskErrorState extends AppStates{
   final String error;
   DeleteTaskErrorState(this.error);
+}
+//>>>>>>>>>>>>>>>update task status<<<<<<<<<<<<<<<<<<<
+
+class UpdateTaskStatusSuccessState extends AppStates{}
+class UpdateTaskStatusErrorState extends AppStates{
+  final String error;
+  UpdateTaskStatusErrorState(this.error);
 }

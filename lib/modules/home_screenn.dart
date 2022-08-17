@@ -23,10 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
       child: BlocConsumer<AppCubit,AppStates>(
         listener: (context,state){},
         builder: (context, state) {
+          bool tap=true;
           AppCubit cubit=BlocProvider.of(context);
           return Scaffold(
             body: ConditionalBuilder(
-              condition: state is !GetUserDataLoadingState,
+              condition: state is !GetTasksLoadingState,
               fallback: (context)=>Center(child: CircularProgressIndicator(color: Colors.white,)),
               builder:(context)=> Padding(
                 padding: const EdgeInsets.all(15),
@@ -42,21 +43,34 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     if(cubit.tasks.length==0)
-                      Expanded(child: Center(child:Text('No Tasks To Do',style: Theme.of(context).textTheme.headline5?.copyWith(color: Colors.white,fontWeight: FontWeight.w600)),)),
+                      Expanded(child: Center(child:Text('No Tasks To Do'
+                          ,style: Theme.of(context).textTheme.headline5?.
+                          copyWith(color: Colors.white,fontWeight: FontWeight.w600)),)),
                     if(cubit.tasks.length!=0)
                       Expanded(
                       child: ListView.builder(
-
                         itemBuilder: (context,index){
                           if(cubit.tasks.length!=0)
-                            return TaskItem(taskModel: cubit.tasks[index],onDismissed: (direction){
+                            return TaskItem(
+                              index:index,
+                              taskModel: cubit.tasks[index],
+                              onDismissed: (direction){
                               setState(() {
                                 cubit.tasks.removeAt(index);
+                                cubit.deleteTask(index: index);
                                 print('delete object number: '+index.toString());
                               });
-                            },);
-                          return Container();
+                            },
 
+                             //  onChanged: (on){
+                             //    setState(() {
+                             //      tap=on!;
+                             // //     cubit.tasks[index].status=on;
+                             //    });
+                             //  },
+                             //  tapped: tap,
+                            );
+                          return Container();
                           },
                         itemCount: cubit.tasks.length,
                     ),)

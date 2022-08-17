@@ -51,8 +51,7 @@ TaskModel taskModel=TaskModel(text: text, status: false, date: date,time:time,ta
         .collection('tasks')
         .add(taskModel.toMap())
         .then((value) {
-          tasksIds.add(value.id);
-          print('Task ID: '+tasksIds.length.toString());
+          //tasksIds.add(value.id);
           emit(AddNewTaskSuccessState());
     })
         .catchError((error){
@@ -62,6 +61,7 @@ TaskModel taskModel=TaskModel(text: text, status: false, date: date,time:time,ta
   }
 
   void getTasks(){
+    emit(GetTasksLoadingState());
     FirebaseFirestore.instance.collection('users').
     doc(uId).
     collection('tasks').
@@ -69,7 +69,9 @@ TaskModel taskModel=TaskModel(text: text, status: false, date: date,time:time,ta
     then((value) {
       value.docs.forEach((element) {
         tasks.add(TaskModel.fromJson(element.data()));
+        tasksIds.add(element.id);
       });
+      print('Task ID: '+tasksIds.length.toString());
       emit(GetTasksSuccessState());
     }).
     catchError((error){
@@ -94,6 +96,22 @@ void deleteTask(
         .catchError((error){
           print(error.toString());
           emit(DeleteTaskErrorState(error.toString()));
+    });
+}
+//>>>>>>>>>>>>>>>update task status<<<<<<<<<<<<<<<<<<<
+
+void updateTaskStatus({
+  required int index,
+  required bool status
+}){
+    FirebaseFirestore.instance.collection('users')
+        .doc(uId).collection('tasks').doc(tasksIds[index]).update({
+      'status':status
+    }).then((value) {
+      emit(UpdateTaskStatusSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(UpdateTaskStatusErrorState(error.toString()));
     });
 }
 

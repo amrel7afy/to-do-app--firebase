@@ -2,7 +2,7 @@ class TaskModel{
 
   late final String text;
   late final String taskId;
-  late final bool status;
+  late bool status;
   late final String date;
   late final String time;
   TaskModel({required this.text,required this.status,required this.date,required this.time,required this.taskId});
