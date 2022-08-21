@@ -13,9 +13,11 @@ class HomeScreen extends StatefulWidget {
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
+
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -27,9 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
           AppCubit cubit=BlocProvider.of(context);
           return Scaffold(
             body: ConditionalBuilder(
-              condition: state is !GetTasksLoadingState,
+              condition:!cubit.loading,
               fallback: (context)=>Center(child: CircularProgressIndicator(color: Colors.white,)),
-              builder:(context)=> Padding(
+              builder:(context){
+                return Padding(
                 padding: const EdgeInsets.all(15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,41 +45,41 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),),
                       ],
                     ),
+
+                    if(cubit.tasks.length!=0)
+                      Expanded(
+                        child: ListView.builder(
+                          itemBuilder: (context,index){
+                            if(cubit.tasks.length!=0&&cubit.tasks[index].status==false)
+                              return NewTaskItem(
+                                index:index,
+                                taskModel: cubit.tasks[index],
+                                onDismissed: (direction){
+                                  setState(() {
+                                    cubit.tasks.removeAt(index);
+                                    cubit.deleteTask(index: index);
+                                    print('delete object number: '+index.toString());
+                                  });
+                                },
+                                //  onChanged: (on){
+                                //    setState(() {
+                                //      tap=on!;
+                                // //     cubit.tasks[index].status=on;
+                                //    });
+                                //  },
+                                //  tapped: tap,
+                              );
+                            return Container();
+                          },
+                          itemCount: cubit.tasks.length,
+                        ),),
                     if(cubit.tasks.length==0)
                       Expanded(child: Center(child:Text('No Tasks To Do'
                           ,style: Theme.of(context).textTheme.headline5?.
                           copyWith(color: Colors.white,fontWeight: FontWeight.w600)),)),
-                    if(cubit.tasks.length!=0)
-                      Expanded(
-                      child: ListView.builder(
-                        itemBuilder: (context,index){
-                          if(cubit.tasks.length!=0)
-                            return TaskItem(
-                              index:index,
-                              taskModel: cubit.tasks[index],
-                              onDismissed: (direction){
-                              setState(() {
-                                cubit.tasks.removeAt(index);
-                                cubit.deleteTask(index: index);
-                                print('delete object number: '+index.toString());
-                              });
-                            },
-
-                             //  onChanged: (on){
-                             //    setState(() {
-                             //      tap=on!;
-                             // //     cubit.tasks[index].status=on;
-                             //    });
-                             //  },
-                             //  tapped: tap,
-                            );
-                          return Container();
-                          },
-                        itemCount: cubit.tasks.length,
-                    ),)
                   ],
                 ),
-              ),
+              );} ,
             ),
             appBar: AppBar(
               backgroundColor: primaryColor,
@@ -108,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Icon(Icons.add,size: 30,)),
               ),
             ),
-
+            drawer: drawer(context,),
           );
         },
       ),

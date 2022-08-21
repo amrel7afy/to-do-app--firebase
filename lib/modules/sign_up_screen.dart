@@ -68,7 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               }
                             },
                             child: Container(
-                              height: 60,
+                              height: 45,
                               clipBehavior: Clip.antiAliasWithSaveLayer,
                               decoration: BoxDecoration(
                                   color: pinkColor,

@@ -20,8 +20,6 @@ class NewTaskScreen extends StatelessWidget {
       child: BlocConsumer<AppCubit,AppStates>(
         listener: (context,state){
           if(state is AddNewTaskSuccessState){
-            AppCubit.get(context).getTasks();}
-           if(state is GetTasksSuccessState){
              navigateAndFinish(context, HomeScreen());
           }
         },
@@ -76,7 +74,7 @@ class NewTaskScreen extends StatelessWidget {
               ),
             ),
             appBar: AppBar(
-              backgroundColor: primaryColor,
+
               elevation: 0.0,
               actions: [
                 DefaultTextButton(text: 'Add Task', onPressed: (){

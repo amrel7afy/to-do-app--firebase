@@ -16,18 +16,11 @@ import 'modules/sign_up_screen.dart';
 void main()async{
 WidgetsFlutterBinding.ensureInitialized();
 await Firebase.initializeApp();
-BlocOverrides.runZoned(() {
-  runApp(MyApp(
 
-  //  startWidget: widget,
-  ));
-}, blocObserver: SimpleBlocObserver());
-
-/*
 await CacheHelper.init();
- late Widget widget;
-uId=CacheHelper.getData(key: 'uId')??'';
-
+Widget widget;
+uId=await CacheHelper.getData(key: 'uId')??'';
+print('From Cache'+uId);
 
 if(!uId.isEmpty){
   widget=HomeScreen();
@@ -35,25 +28,38 @@ if(!uId.isEmpty){
   widget=LoginScreen();
 }
 
+BlocOverrides.runZoned(() {
+  runApp(MyApp(
+    startWidget: widget,
+  ));
+}
+    ,blocObserver: SimpleBlocObserver());
 
- */
+
 }
 class MyApp extends StatelessWidget {
-//  late final Widget startWidget;
-// MyApp({required this.startWidget});
+ late final Widget startWidget;
+MyApp({required this.startWidget});
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context)=>AppCubit()..getUserData(),
       child: MaterialApp(
+        home:  startWidget,
         theme: ThemeData(
-          scaffoldBackgroundColor: primaryColor,
-                checkboxTheme: CheckboxThemeData(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                    ))
+            scaffoldBackgroundColor: primaryColor,
+            checkboxTheme: CheckboxThemeData(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                )),
+          drawerTheme: DrawerThemeData(
+            backgroundColor: secondaryColor,
+          ),
+          appBarTheme: AppBarTheme(
+            backgroundColor: primaryColor,
+            elevation: 0.0
+          )
         ),
-        home:  LoginScreen(),
       ),
     );
   }

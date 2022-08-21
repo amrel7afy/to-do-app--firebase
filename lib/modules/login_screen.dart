@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:new_cis_to_do_app/modules/sign_up_screen.dart';
 import 'package:new_cis_to_do_app/shared/cubit/login_cubit/login_cubit.dart';
+import 'package:new_cis_to_do_app/shared/network/local/cache_helper.dart';
 
 import '../constants.dart';
 import '../reusable_components.dart';
@@ -23,6 +24,8 @@ class LoginScreen extends StatelessWidget {
         listener: (context,state){
           if(state is LoginSuccessState){
             uId=state.uId;
+            print('Set uID to cache'+uId);
+            CacheHelper.saveData(key: 'uId', value: uId);
             navigateAndFinish(context, HomeScreen());
           }
         },
@@ -76,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                               }
                             },
                             child: Container(
-                              height: 60,
+                              height: 45,
                               clipBehavior: Clip.antiAliasWithSaveLayer,
                               decoration: BoxDecoration(
                                   color: pinkColor,
